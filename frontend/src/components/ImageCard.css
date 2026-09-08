@@ -1,0 +1,128 @@
+.image-card{
+    background:rgba(255,255,255,.92);
+    backdrop-filter:blur(10px);
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:0 10px 30px rgba(0,0,0,.12);
+    transition:.35s ease;
+    display:flex;
+    flex-direction:column;
+    border:1px solid rgba(255,255,255,.5);
+}
+
+.image-card:hover{
+    transform:translateY(-10px);
+    box-shadow:0 20px 45px rgba(0,0,0,.18);
+}
+
+.image-card img{
+    width:100%;
+    height:260px;
+    object-fit:cover;
+    display:block;
+}
+
+.card-body{
+    padding:18px;
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+}
+
+.similarity{
+    font-size:14px;
+    font-weight:600;
+    color:#64748b;
+    text-align:center;
+    background:#eef4ff;
+    padding:8px;
+    border-radius:10px;
+}
+
+.buttons{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.vote-buttons{
+    display:flex;
+    gap:10px;
+}
+
+.vote-buttons button{
+    flex:1;
+}
+
+.buttons button{
+    border:none;
+    border-radius:12px;
+    padding:12px;
+    cursor:pointer;
+    font-size:15px;
+    font-weight:600;
+    transition:.25s;
+}
+
+.like-btn{
+    background:#22c55e;
+    color:white;
+}
+
+.like-btn:hover{
+    background:#16a34a;
+    transform:translateY(-2px);
+}
+
+.like-btn.active{
+    background:#15803d;
+}
+
+.dislike-btn{
+    background:#ef4444;
+    color:white;
+}
+
+.dislike-btn:hover{
+    background:#dc2626;
+    transform:translateY(-2px);
+}
+
+.dislike-btn.active{
+    background:#991b1b;
+}
+
+.download-btn{
+    width:100%;
+    background:#2563eb;
+    color:white;
+}
+
+.download-btn:hover{
+    background:#1d4ed8;
+    transform:translateY(-2px);
+}
+
+.download-btn:active,
+.like-btn:active,
+.dislike-btn:active{
+    transform:scale(.97);
+}
+
+.download-link{
+    width:100%;
+    text-decoration:none;
+}
+
+.like-btn.active,
+.dislike-btn.active{
+    box-shadow:inset 0 2px 8px rgba(0,0,0,.25);
+}
+
+@media(max-width:600px){
+
+    .image-card img{
+        height:220px;
+    }
+
+}
