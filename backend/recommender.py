@@ -1,5 +1,5 @@
 
-#disliked effect tharnilla
+#disliked effect tharnilla(ith solve chyth kaynu test chythila)
 #oombiya alg..cluster cheyyanam
 from loader import DataLoader
 import numpy as np
@@ -133,47 +133,41 @@ class Recommender:
 
         return recommendations
     
-    def recommend_from_preferences(self,liked,disliked=None,shown=None,top_k=10):
+
+    def recommend_from_preferences(
+        self,
+        liked,
+        disliked=None,
+        shown=None,
+        top_k=10
+    ):
         if disliked is None:
             disliked = []
 
         if shown is None:
             shown = []
 
-        if len(liked) == 0:
-
-            liked=[]
-
         excluded = set(liked)
         excluded.update(disliked)
         excluded.update(shown)
 
         if not liked:
-            return self.random_recommendations(excluded,set(disliked))
+            return self.random_recommendations(
+                excluded,
+                disliked,
+                top_k
+            )
 
-        expl_count=min(2,top_k)
-        pers_count=top_k-expl_count
+        expl_count = min(2, top_k)
+        pers_count = top_k - expl_count
 
         candidate_scores = {}
 
         search_k = 100
 
-
-
         for like in liked:
 
             user_vector = self.loader.embeddings[like].copy()
-
-            if disliked:
-
-                disliked_embeddings = self.loader.embeddings[disliked]
-
-                disliked_vector = np.mean(
-                    disliked_embeddings,
-                    axis=0
-                )
-
-                user_vector = user_vector - 0.3 * disliked_vector
 
             norm = np.linalg.norm(user_vector)
 
@@ -190,6 +184,26 @@ class Recommender:
                 if idx in excluded:
                     continue
 
+                rejected = False
+
+                for disliked_id in disliked:
+
+                    disliked_embedding = self.loader.embeddings[
+                        disliked_id
+                    ]
+
+                    dislike_similarity = np.dot(
+                        self.loader.embeddings[idx],
+                        disliked_embedding
+                    )
+
+                    if dislike_similarity > 0.75:
+                        rejected = True
+                        break
+
+                if rejected:
+                    continue
+
                 if idx not in candidate_scores:
                     candidate_scores[idx] = similarity
                 else:
@@ -197,6 +211,7 @@ class Recommender:
                         candidate_scores[idx],
                         similarity
                     )
+
         sorted_candidates = sorted(
             candidate_scores.items(),
             key=lambda x: x[1],
@@ -204,10 +219,9 @@ class Recommender:
         )
 
         indices = [idx for idx, _ in sorted_candidates]
-
         similarities = [score for _, score in sorted_candidates]
 
-        pers= self.diverse_recommendations(
+        pers = self.diverse_recommendations(
             similarities,
             indices,
             excluded,
@@ -216,9 +230,16 @@ class Recommender:
 
         for pers_image in pers:
             excluded.add(pers_image["image_id"])
-        expl=self.random_recommendations(excluded,set(disliked),expl_count)
 
-        return pers+expl
+        expl = self.random_recommendations(
+            excluded,
+            disliked,
+            expl_count
+        )
+
+        return pers + expl
+
+
 
     def recommend_from_image(self, image_id: int, top_k=10):
 
